@@ -1,23 +1,17 @@
-const express = require('express');
 const mongoose = require("mongoose");
-const cors = require('cors');
-const router = require("./routes/activity-routes")
-const app = express();
+const app = require('./api/app');
+const config = require('./config');
 
-//Middlewear
-app.use(express.json());
-app.use(cors());
-app.use("/activities", router); // localhost:5000/books
 
-mongoose
-    .connect(
-       "mongodb+srv://admin:luY7ixwSoVK60Eyz@cluster0.krego.mongodb.net/exerNotion?retryWrites=true&w=majority"
-    )
-    .then(() => console.log("connected to database"))
-    .then(() =>{
-        
-        app.listen(5000);
-    })
-    .catch((err) => console.log(err));
+const boot = async () => {
+    // Connect to mongodb
+    await mongoose.connect(config.mongoUri, config.mongoOptions);
+    // Start express server
+    app.listen(config.port, () => {
+      console.log(`Server is listening on port ${config.port}`);
+    });
+  };
+  
+  boot();
 
 //luY7ixwSoVK60Eyz
